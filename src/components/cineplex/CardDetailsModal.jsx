@@ -1,5 +1,4 @@
 import React from 'react'
-import checkoutIcon from '../../assets//icons/checkout.svg'
 import deleteIcon from '../../assets/delete.svg'
 import useCardData from '../../hook/useCardData'
 import { getImgUrl } from '../../utils/cineplex-utils'
@@ -61,13 +60,6 @@ export default function CardDetailsModal({ onCardDetailsClose }) {
             )}
           </div>
           <div className="flex items-center justify-end gap-2">
-            <a
-              className="rounded-md p-2 md:px-4 inline-flex items-center space-x-2 bg-primary text-[#171923] text-sm"
-              href="#"
-            >
-              <img src={checkoutIcon} width="24" height="24" alt="" />
-              <span>Checkout</span>
-            </a>
             <a
               onClick={onCardDetailsClose}
               className="border border-[#74766F] rounded-lg py-2 px-5 flex items-center justify-center gap-2 text-[#6F6F6F] dark:text-gray-200 font-semibold text-sm"

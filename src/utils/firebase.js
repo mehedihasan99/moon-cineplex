@@ -1,7 +1,10 @@
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateProfile,
 } from 'firebase/auth'
@@ -22,6 +25,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 
 const auth = getAuth(app)
+const provider = new GoogleAuthProvider()
 
 //^ create account with email and password
 const createUserWithEmail = async (
@@ -51,10 +55,9 @@ const createUserWithEmail = async (
       displayName: fullName,
     })
 
-    return userCredential
+    return userCredential.user
   } catch (error) {
-    console.error(error)
-    return error
+    throw new Error(error)
   }
 }
 
@@ -66,15 +69,41 @@ const signInWithEmail = async (email, password) => {
       email,
       password
     )
-    return userCredential
+    return userCredential.user
   } catch (error) {
-    console.error(error)
-    return error
+    throw new Error(error)
   }
 }
-const signOutUser = async () => {
-  try {
-    await signOut(auth)
-  } catch (error) {}
+// ^ handle sign out
+const userSignOut = () => {
+  signOut(auth)
+    .then(() => {})
+    .catch((error) => {
+      throw new Error(error)
+    })
 }
-export { createUserWithEmail, signInWithEmail, signOutUser }
+// ^ forget password
+const forgetPassword = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email)
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+// ^ google sign in
+const googleSignIn = async () => {
+  try {
+    const userCredential = await signInWithPopup(auth, provider)
+    return userCredential.user
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+export {
+  auth,
+  createUserWithEmail,
+  forgetPassword,
+  googleSignIn,
+  signInWithEmail,
+  userSignOut,
+}

@@ -3,19 +3,23 @@ import { IoIosLogOut } from 'react-icons/io'
 import { Link } from 'react-router-dom'
 import moon from '../assets/icons/moon.svg'
 import sun from '../assets/icons/sun.svg'
-import logo from '../assets/logo.svg'
-import ring from '../assets/ring.svg'
+import logo from '../assets/moon-logo.png'
 import shoppingCart from '../assets/shopping-cart.svg'
 import useAuth from '../hook/useAuth'
 import useCardData from '../hook/useCardData'
 import useTheme from '../hook/useTheme'
-import { signOutUser } from '../utils/firebase'
+import { userSignOut } from '../utils/firebase'
 import CardDetailsModal from './cineplex/CardDetailsModal'
 export default function Header() {
   const [showCard, setShowCard] = useState(false)
   const { state } = useCardData()
   const { darkMode, setDarkMode } = useTheme()
   const { auth, setAuth } = useAuth()
+  const isDisabled = Object.keys(auth).length === 0
+  const handleLogout = () => {
+    userSignOut()
+    setAuth({})
+  }
   return (
     <header>
       {showCard && (
@@ -25,9 +29,9 @@ export default function Header() {
           }}
         />
       )}
-      <nav className="container flex items-center justify-between space-x-10 py-6">
+      <nav className="container flex items-center justify-between space-x-10 py-2">
         <Link to="/">
-          <img src={logo} width="139" height="26" alt="" />
+          <img src={logo} width="90" height="24" alt="" />
         </Link>
 
         <ul className="flex items-center space-x-5">
@@ -39,7 +43,11 @@ export default function Header() {
               <img src={darkMode ? sun : moon} width="24" height="24" alt="" />
             </button>
           </li>
-          <li className="relative">
+          <li
+            className={`relative ${
+              isDisabled ? 'opacity-50 pointer-events-none' : ''
+            }`}
+          >
             <button
               onClick={() => setShowCard(true)}
               className="bg-primary/20 dark:bg-primary/[7%] rounded-lg backdrop-blur-[2px] p-1 inline-block"
@@ -47,13 +55,13 @@ export default function Header() {
               <img src={shoppingCart} width="24" height="24" alt="" />
             </button>
 
-            {state.cardData.length > 0 && (
+            {state?.cardData?.length > 0 && (
               <span className="bg-green-400 text-white text-sm absolute -top-4 left-7 w-6 h-6 flex  justify-center items-center rounded-full">
                 {state.cardData.length}
               </span>
             )}
           </li>
-          {auth.email && (
+          {auth?.email && (
             <li>
               <Link
                 to="/profile"
@@ -63,14 +71,10 @@ export default function Header() {
               </Link>
             </li>
           )}
-          {Object.keys(auth).length !== 0 ? (
+          {Object?.keys(auth)?.length !== 0 ? (
             <li className="relative">
               <button
-                onClick={() => {
-                  signOutUser()
-                  setAuth({})
-                }}
-                to="/login"
+                onClick={handleLogout}
                 className="bg-primary/20 dark:bg-primary/[7%] rounded-lg backdrop-blur-[2px] p-1 h-8 text-green-500 flex justify-center items-center font-medium "
               >
                 <IoIosLogOut size={26} />

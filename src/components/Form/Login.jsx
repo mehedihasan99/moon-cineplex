@@ -1,9 +1,9 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { FaFacebookF, FaGoogle } from 'react-icons/fa' // Import social icons
+import { FaGoogle } from 'react-icons/fa' // Import social icons
 import { Link, useNavigate } from 'react-router-dom'
 import useAuth from '../../hook/useAuth'
-import { signInWithEmail } from '../../utils/firebase'
+import { googleSignIn, signInWithEmail } from '../../utils/firebase'
 
 export default function Login() {
   const {
@@ -14,23 +14,35 @@ export default function Login() {
   } = useForm()
   const navigate = useNavigate()
   const { setAuth } = useAuth()
+
   async function handleFormSubmit(formData) {
     try {
       const response = await signInWithEmail(formData.email, formData.password)
-      console.log(response)
-      setAuth(response.user)
+      if (response) {
+        setAuth(response)
+        navigate('/') // Navigate only if authentication is successful
+      }
     } catch (error) {
       setError('root.random', {
         type: 'manual',
         message: error.message,
       })
     }
-    navigate('/')
   }
-
-  // Placeholder for social login handling
-  const handleSocialLogin = (provider) => {
-    console.log(`Login with ${provider}`)
+  // google login
+  async function googleLogin() {
+    try {
+      const response = await googleSignIn()
+      if (response) {
+        setAuth(response)
+        navigate('/')
+      }
+    } catch (error) {
+      setError('root.random', {
+        type: 'manual',
+        message: error.message,
+      })
+    }
   }
 
   return (
@@ -93,7 +105,7 @@ export default function Login() {
                 </span>
               </label>
               <Link
-                to="/forgot-password"
+                to="/forgetPassword"
                 className="text-sm text-primary hover:underline"
               >
                 Forgot password?
@@ -108,26 +120,22 @@ export default function Login() {
               >
                 Login
               </button>
-              <p className="text-red-500 text-xs">
-                {errors.root?.random?.message}
-              </p>
+              {/* Displaying the error message */}
+              {errors.root?.random && (
+                <p className="text-red-500 text-center text-xl">
+                  {errors.root.random.message}
+                </p>
+              )}
               <p className="text-center text-sm text-gray-600 dark:text-gray-300">
                 Or login with
               </p>
               <div className="flex justify-center space-x-4">
                 <button
+                  onClick={googleLogin}
                   type="button"
-                  onClick={() => handleSocialLogin('Google')}
                   className="flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-full hover:bg-red-700 transition"
                 >
                   <FaGoogle size={20} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleSocialLogin('Facebook')}
-                  className="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
-                >
-                  <FaFacebookF size={20} />
                 </button>
               </div>
               <p className="text-center text-sm text-gray-600 dark:text-gray-300">

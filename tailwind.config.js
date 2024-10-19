@@ -9,7 +9,7 @@ export default {
         padding: '1.2rem',
       },
       colors: {
-        primary: '#00D991',
+        primary: '#7AB2B2',
       },
     },
   },
