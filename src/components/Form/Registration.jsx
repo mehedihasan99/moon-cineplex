@@ -33,8 +33,8 @@ export default function Registration() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-[#12141D]">
-      <div className="w-full max-w-[420px] sm:max-w-[600px] lg:max-w-[790px] p-4">
+    <div className="flex items-center  justify-center mt-7 sm:mt-0 sm:min-h-screen bg-gray-100 dark:bg-[#12141D]">
+      <div className="w-full max-w-[420px]  sm:max-w-[600px] lg:max-w-[790px] p-4">
         <div className="bg-white shadow-md -mt-20 dark:bg-[#2A2A34] rounded-2xl p-5 md:p-9">
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
             <div className="space-y-2">
