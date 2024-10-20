@@ -20,7 +20,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-300">
+    <div className="flex items-center justify-center mt-7 sm:-mt-24 sm:min-h-screen bg-gray-100 dark:bg-[#12141D]">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold mb-6 text-center">Forgot Password</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
